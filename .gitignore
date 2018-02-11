@@ -3,3 +3,6 @@
 ################################################################################
 
 /GAReportExtractor/GAReportExtractor.App/bin/Debug
+/GAReportExtractor/GAReportExtractor.App/obj/Debug
+/.vs
+/GAReportExtractor/.vs
