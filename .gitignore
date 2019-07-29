@@ -1,8 +1,60 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
+﻿## Ignore Visual Studio temporary files, build results, etc.
 
-/GAReportExtractor/GAReportExtractor.App/bin/Debug
-/GAReportExtractor/GAReportExtractor.App/obj/Debug
-/.vs
-/GAReportExtractor/.vs
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+## See more on package restore for Nuget 2.7 here: http://docs.nuget.org/consume/package-restore
+# Ignore NuGet Packages
+*.nupkg
+# Ignore the packages folder
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+
+*.obj
+*.pdb
+*.tmp
+*.tmp_proj
+*.log
+*.err
+*.vspscc
+*.vssscc
+
+# CBT specific files and dirs.
+/sln/
+[Bb]intest/
+
+$tf/localversion.tf1
+$tf/localversion.tfb
+$tf/pendingchanges.tf1
+$tf/pendingchanges.tfb
+$tf/properties.tf1
+project.lock.json
+**/.vs/
