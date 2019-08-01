@@ -42,17 +42,6 @@ namespace GAReportExtractor.App
         }
 
         /// <summary>
-        /// Fetches all required reports from Google Analytics
-        /// </summary>
-        /// <param name="getReportsRequest"></param>
-        /// <returns></returns>
-        private static GetReportsResponse GetReport(GetReportsRequest getReportsRequest)
-        {
-            var analyticsService = GetAnalyticsReportingServiceInstance();
-            return analyticsService.Reports.BatchGet(getReportsRequest).Execute();
-        }
-
-        /// <summary>
         /// Create date range based on entries in configuration
         /// </summary>
         /// <param name="config"></param>
@@ -63,14 +52,11 @@ namespace GAReportExtractor.App
             var strEndDateFromConfig = config.DateConfiguration.EndDate;
             var strNumberOfDaysFromConfig = config.DateConfiguration.NumberOfDays;
 
-            DateTime reportStartDate;
-            DateTime.TryParse(strStartDateFromConfig, out reportStartDate);
+            DateTime.TryParse(strStartDateFromConfig, out DateTime reportStartDate);
 
-            DateTime reportEndDate;
-            DateTime.TryParse(strEndDateFromConfig, out reportEndDate);
+            DateTime.TryParse(strEndDateFromConfig, out DateTime reportEndDate);
 
-            int numberOfDays;
-            int.TryParse(strNumberOfDaysFromConfig, out numberOfDays);
+            int.TryParse(strNumberOfDaysFromConfig, out int numberOfDays);
 
             //Set start and end date for report using number of days
             var startDate = DateTime.Now.AddDays(-numberOfDays);
@@ -98,7 +84,7 @@ namespace GAReportExtractor.App
         /// Get all reports configured in App.config
         /// </summary>
         /// <returns></returns>
-        public static void ProcessAllReports(string viewId)
+        public static void GetReport(string viewId)
         {
             try
             {
@@ -107,7 +93,7 @@ namespace GAReportExtractor.App
 
                 foreach (var item in config.Reports)
                 {
-                    var report = item as Report;
+                    Report report = item as Report;
                     if (report != null)
                     {                        
                         var stopwatch = new Stopwatch();

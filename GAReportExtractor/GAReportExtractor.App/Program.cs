@@ -15,7 +15,7 @@ namespace GAReportExtractor.App
                 var views = ConfigurationManager.AppSettings["Views"].Split(',');                
                 foreach (var viewId in views)
                 {                    
-                    ReportManager.ProcessAllReports(viewId);
+                    ReportManager.GetReport(viewId.Trim());
                 }
             }
             catch(Exception ex)
