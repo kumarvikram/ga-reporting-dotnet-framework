@@ -11,7 +11,7 @@ For step by step guide on how to do API and credential setup in Google Developer
 ```sh
  <add key="KeyFileName" value="key.json"/>
 ```
-* Update ViewId key in App.config with view id from Google analytics.
+* Google Analytics ViewId(s) to fetch report from. Separate by comma if there are multiple ViewIds.
 ```sh
-<add key="ViewId" value="123456"/>
+<add key="Views" value="123456,123456"/>
 ```
