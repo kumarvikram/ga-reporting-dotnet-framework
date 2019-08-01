@@ -53,6 +53,48 @@ namespace GAReportExtractor.App
         }
 
         /// <summary>
+        /// Create date range based on entries in configuration
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        private static List<DateRange> GetDateRange(ReportConfiguration config)
+        {
+            var strStartDateFromConfig = config.DateConfiguration.StartDate;
+            var strEndDateFromConfig = config.DateConfiguration.EndDate;
+            var strNumberOfDaysFromConfig = config.DateConfiguration.NumberOfDays;
+
+            DateTime reportStartDate;
+            DateTime.TryParse(strStartDateFromConfig, out reportStartDate);
+
+            DateTime reportEndDate;
+            DateTime.TryParse(strEndDateFromConfig, out reportEndDate);
+
+            int numberOfDays;
+            int.TryParse(strNumberOfDaysFromConfig, out numberOfDays);
+
+            //Set start and end date for report using number of days
+            var startDate = DateTime.Now.AddDays(-numberOfDays);
+            var endDate = numberOfDays == 0 ? DateTime.Now : DateTime.Now.AddDays(-1);
+
+            //Use start and end date from config if specified else keep the existing values
+            if (reportStartDate != DateTime.MinValue && reportEndDate != DateTime.MinValue &&
+                reportStartDate <= reportEndDate)
+            {
+                startDate = reportStartDate;
+                endDate = reportEndDate;
+            }
+
+            return new List<DateRange>
+                {
+                    new DateRange
+                    {
+                        StartDate = startDate.ToString("yyyy-MM-dd"),
+                        EndDate = endDate.ToString("yyyy-MM-dd")
+                    }
+                };
+        }
+        
+        /// <summary>
         /// Get all reports configured in App.config
         /// </summary>
         /// <returns></returns>
@@ -63,55 +105,19 @@ namespace GAReportExtractor.App
                 Logger.Info("Processing View Id: " + viewId);
                 var config = ReportConfiguration.GetConfig();
 
-                var strStartDateFromConfig = config.DateConfiguration.StartDate;
-                var strEndDateFromConfig = config.DateConfiguration.EndDate;
-                var strNumberOfDaysFromConfig = config.DateConfiguration.NumberOfDays;
-
-                DateTime reportStartDate;
-                DateTime.TryParse(strStartDateFromConfig, out reportStartDate);
-
-                DateTime reportEndDate;
-                DateTime.TryParse(strEndDateFromConfig, out reportEndDate);
-
-                int numberOfDays;
-                int.TryParse(strNumberOfDaysFromConfig, out numberOfDays);
-
-                //Set start and end date for report using number of days
-                var startDate = DateTime.Now.AddDays(-numberOfDays);
-                var endDate = numberOfDays == 0 ? DateTime.Now : DateTime.Now.AddDays(-1);
-
-                //Use start and end date from config if specified else keep the existing values
-                if (reportStartDate != DateTime.MinValue && reportEndDate != DateTime.MinValue &&
-                    reportStartDate <= reportEndDate)
-                {
-                    startDate = reportStartDate;
-                    endDate = reportEndDate;
-                }
-
-                var dateRangeList = new List<DateRange>
-                {
-                    new DateRange
-                    {
-                        StartDate = startDate.ToString("yyyy-MM-dd"),
-                        EndDate = endDate.ToString("yyyy-MM-dd")
-                    }
-                };
-
-
                 foreach (var item in config.Reports)
                 {
                     var report = item as Report;
                     if (report != null)
-                    {
-                        var startDateTime = DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.CurrentCulture);
-                        var stopwatch = new Stopwatch();                       
+                    {                        
+                        var stopwatch = new Stopwatch();
                         Logger.Info("Started fetching report: " + report.Name);
                         // Create the Metrics and dimensions object based on configuration.
                         var metrics = report.Metrics.Split(',').Select(m => new Metric { Expression = m }).ToList();
                         var dimensions = report.Dimensions.Split(',').Select(d => new Dimension { Name = d }).ToList();
                         var reportRequest = new ReportRequest
                         {
-                            DateRanges = dateRangeList,
+                            DateRanges = GetDateRange(config),
                             Metrics = metrics,
                             Dimensions = dimensions,
                             ViewId = viewId,
@@ -122,18 +128,9 @@ namespace GAReportExtractor.App
                         var combinedReportResponse = new GetReportsResponse { Reports = new List<GAReport>() };
                         stopwatch.Start();
                         var reportsResponse = GetAnalyticsReportingServiceInstance().Reports.BatchGet(new GetReportsRequest { ReportRequests = new List<ReportRequest> { reportRequest } }).Execute();
-                        string rowCount = null;
-                        string samplesReadCounts = null;
-                        string samplingSpaceSizes = null;
+                        
                         if (reportsResponse != null)
                         {
-                            rowCount = reportsResponse.Reports[0].Data.RowCount.ToString();
-                            if (reportsResponse.Reports[0].Data.SamplesReadCounts != null && reportsResponse.Reports[0].Data.SamplesReadCounts.Count > 0)
-                                samplesReadCounts = reportsResponse.Reports[0].Data.SamplesReadCounts[0].Value.ToString();
-
-                            if (reportsResponse.Reports[0].Data.SamplingSpaceSizes != null && reportsResponse.Reports[0].Data.SamplingSpaceSizes.Count > 0)
-                                samplingSpaceSizes = reportsResponse.Reports[0].Data.SamplingSpaceSizes[0].Value.ToString();
-
                             ((List<GAReport>)combinedReportResponse.Reports).AddRange(reportsResponse.Reports);
                             while (reportsResponse.Reports[0].NextPageToken != null)
                             {
@@ -143,14 +140,14 @@ namespace GAReportExtractor.App
                             }
                             stopwatch.Stop();
                             SaveReportToDisk(combinedReportResponse, viewId);
-                        }                        
+                        }
                         Logger.Info("Finished fetching report: " + report.Name);
                         Logger.Info(string.Format("Time elapsed: {0:hh\\:mm\\:ss}", stopwatch.Elapsed));
                     }
                 }
             }
             catch (Exception ex)
-            {                
+            {
                 Logger.Error("Error in fetching reports: " + ex);
             }
         }
@@ -168,8 +165,14 @@ namespace GAReportExtractor.App
 
                     var reportName = GetReportNameByMetric(reportsResponse.Reports[0].ColumnHeader.MetricHeader.MetricHeaderEntries[0].Name);
                     var fileName = string.Format("{0}_{1}_{2}.json", reportName, viewId, DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.CurrentCulture));
-                    
-                    File.WriteAllText(string.Format(@"{0}\{1}", outputDirectory, fileName), JsonConvert.SerializeObject(reportsResponse.Reports));
+
+                    var outputList=new List<object>();
+                    foreach(var row in reportsResponse.Reports.SelectMany(r=>r.Data.Rows))
+                    {
+                      outputList.Add(new {Dimensions=row.Dimensions, Metrics=row.Metrics.SelectMany(m => m.Values)});
+                    }
+
+                    File.WriteAllText(string.Format(@"{0}\{1}", outputDirectory, fileName), JsonConvert.SerializeObject(outputList));
                     Logger.Info("Finished geneating extract file...");
                 }
             }
