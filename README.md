@@ -15,11 +15,11 @@ For step by step guide on how to do API and credential setup in Google Developer
 ```sh
 <add key="Views" value="123456,123456"/>
 ```
-Folder location where generated report files would be saved
+* Folder location where generated report files would be saved
 ```sh
 <add key="OutputDirectory" value="C:\Reports" />
 ```
-A sample report configuration 
+* A sample report configuration 
 ```sh
 <ReportConfiguration>
   <!--Specify either Start & End date in MM/DD/YYYY format or NumberOfDays. In case of start and end date, number of days configuration would be skipped-->
@@ -29,4 +29,4 @@ A sample report configuration
   </Reports>
 </ReportConfiguration>
 ```
-[View the complete list of metrics and dimensions that you can use](https://ga-dev-tools.appspot.com/dimensions-metrics-explorer/ "Dimensions & Metrics Explorer")
+View the complete list of metrics and dimensions that you can use [here](https://ga-dev-tools.appspot.com/dimensions-metrics-explorer/ "Dimensions & Metrics Explorer")
