@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GAReportExtractor.App", "GAReportExtractor.App\GAReportExtractor.App.csproj", "{D5A361E4-32BE-4C1A-9262-029CBD2EFEFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GAReportExtractor.Library", "GAReportExtractor.Library\GAReportExtractor.Library.csproj", "{5B3F4B51-A7A2-4E5A-951F-FB3DC0877A05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{D5A361E4-32BE-4C1A-9262-029CBD2EFEFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5A361E4-32BE-4C1A-9262-029CBD2EFEFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5A361E4-32BE-4C1A-9262-029CBD2EFEFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B3F4B51-A7A2-4E5A-951F-FB3DC0877A05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B3F4B51-A7A2-4E5A-951F-FB3DC0877A05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B3F4B51-A7A2-4E5A-951F-FB3DC0877A05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B3F4B51-A7A2-4E5A-951F-FB3DC0877A05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

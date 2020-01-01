@@ -1,4 +1,4 @@
-﻿using GAReportExtractor.App.Configuration;
+﻿using GAReportExtractor.Library.Configuration;
 using Google.Apis.AnalyticsReporting.v4.Data;
 using Newtonsoft.Json;
 using System;
@@ -7,13 +7,14 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Report = GAReportExtractor.App.Configuration.Report;
+using System.Reflection;
+using Report = GAReportExtractor.Library.Configuration.Report;
 
-namespace GAReportExtractor.App
+namespace GAReportExtractor.Library
 {
     public class ReportingService
     {
-        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(typeof(Program));
+        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public void SaveReportToDisk(GetReportsResponse reportsResponse, string viewId)
         {
             try

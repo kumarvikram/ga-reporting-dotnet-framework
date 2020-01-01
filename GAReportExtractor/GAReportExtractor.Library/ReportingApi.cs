@@ -1,23 +1,47 @@
-﻿using GAReportExtractor.App.Configuration;
+﻿using GAReportExtractor.Library.Configuration;
 using Google.Apis.AnalyticsReporting.v4;
 using Google.Apis.AnalyticsReporting.v4.Data;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Services;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using GAReport = Google.Apis.AnalyticsReporting.v4.Data.Report;
-using Report = GAReportExtractor.App.Configuration.Report;
+using Report = GAReportExtractor.Library.Configuration.Report;
 
-namespace GAReportExtractor.App
+namespace GAReportExtractor.Library
 {
     public class ReportingApi
     {
-        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(typeof(Program));
+        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly AnalyticsReportingService analyticsReportingServiceInstance;
-
-        public ReportingApi(AnalyticsReportingService analyticsReportingServiceInstance)
+        /// <summary>
+        /// Intializes and returns Analytics Reporting Service Instance using the parameters stored in key file
+        /// </summary>
+        /// <returns>AnalyticsReportingService</returns>   
+        private AnalyticsReportingService GetAnalyticsReportingServiceInstance()
         {
-            this.analyticsReportingServiceInstance = analyticsReportingServiceInstance;
+            string[] scopes = { AnalyticsReportingService.Scope.AnalyticsReadonly }; //Read-only access to Google Analytics
+            GoogleCredential credential;
+            using (var stream = new FileStream(ConfigurationManager.AppSettings["KeyFileName"], FileMode.Open, FileAccess.Read))
+            {
+                credential = GoogleCredential.FromStream(stream).CreateScoped(scopes);
+            }
+            // Create the  Analytics service.
+            var baseClientInitializer = new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = "GA Extractor",
+            };
+            return new AnalyticsReportingService(baseClientInitializer);
+        }
+        public ReportingApi()
+        {
+            this.analyticsReportingServiceInstance = GetAnalyticsReportingServiceInstance();
         }
 
         /// <summary>

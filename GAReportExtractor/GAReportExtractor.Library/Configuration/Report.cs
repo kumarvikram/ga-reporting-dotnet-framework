@@ -1,14 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 
-namespace GAReportExtractor.App.Configuration
+namespace GAReportExtractor.Library.Configuration
 {
-public class Report : ConfigurationElement
+    public class Report : ConfigurationElement
 {
         [ConfigurationProperty("name", IsRequired = true)]
         public string Name
