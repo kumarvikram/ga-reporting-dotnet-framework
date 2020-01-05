@@ -108,10 +108,15 @@ namespace GAReportExtractor.Library
                             DateRanges = GetDateRangeFromConfiguration(config),
                             Metrics = metrics,
                             Dimensions = dimensions,
-                            ViewId = viewId,
+                            ViewId = viewId.Trim(),
                             SamplingLevel = "LARGE", //https://developers.google.com/analytics/devguides/reporting/core/v4/basics#sampling
-                            PageSize = 10000 //The Analytics Core Reporting API returns a maximum of 10,000 rows per request, no matter how many you ask for. https://developers.google.com/analytics/devguides/reporting/core/v4/rest/v4/reports/batchGet
-                        };                       
+                            PageSize = report.RecordCount>0? report.RecordCount : 10000 //The Analytics Core Reporting API returns a maximum of 10,000 rows per request, no matter how many you ask for. https://developers.google.com/analytics/devguides/reporting/core/v4/rest/v4/reports/batchGet
+                        };
+                        //Sorting as per report configuration 
+                        if (!string.IsNullOrEmpty(report.OrderBy))
+                        {
+                            reportRequest.OrderBys = report.OrderBy.Split(',').Select(o => new OrderBy { FieldName = o.Split('-')[0], SortOrder = o.Split('-')[1] }).ToList();                                
+                        }
                         stopwatch.Start();
                         var reportsResponse = analyticsReportingServiceInstance.Reports.BatchGet(new GetReportsRequest
                         {

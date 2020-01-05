@@ -27,7 +27,7 @@ namespace GAReportExtractor.Library
                     Directory.CreateDirectory(outputDirectory); //Create directory if it doesn't exist
 
                     var reportName = GetReportNameByMetric(reportsResponse.Reports[0].ColumnHeader.MetricHeader.MetricHeaderEntries[0].Name);
-                    var fileName = string.Format("{0}_{1}_{2}.json", reportName, viewId, DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.CurrentCulture));
+                    var fileName = string.Format("{0}_{1}_{2}.json", reportName, viewId.Trim(), DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.CurrentCulture));
 
                     var outputList = new List<object>();
                     foreach (var row in reportsResponse.Reports.SelectMany(r => r.Data.Rows))

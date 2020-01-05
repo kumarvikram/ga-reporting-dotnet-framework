@@ -1,33 +1,34 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 
 namespace GAReportExtractor.Library.Configuration
 {
     public class DateConfigurationElement : ConfigurationElement
     {
-        [ConfigurationProperty("StartDate", IsRequired = true)]
+        [ConfigurationProperty("startDate", IsRequired = true)]
         public string StartDate
         {
             get
             {
-                return this["StartDate"] as string;
+                return this["startDate"] as string;
             }
         }
 
-        [ConfigurationProperty("EndDate", IsRequired = true)]
+        [ConfigurationProperty("endDate", IsRequired = true)]
         public string EndDate
         {
             get
             {
-                return this["EndDate"] as string;
+                return this["endDate"] as string;
             }
         }
-        [ConfigurationProperty("NumberOfDays", IsRequired = true)]
+        [ConfigurationProperty("numberOfDays", IsRequired = true)]
         public string NumberOfDays
         {
             get
             {
-                return this["NumberOfDays"] as string;
+                return this["numberOfDays"] as string;
             }
-        }
+        }        
     }
 }

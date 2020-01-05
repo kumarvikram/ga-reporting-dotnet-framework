@@ -18,8 +18,8 @@ namespace GAReportExtractor.App
                 var reportingService = new ReportingService();
                 foreach (var viewId in views)
                 {
-                    var reportResponse = reportingApi.GetReport(viewId.Trim());
-                    reportingService.SaveReportToDisk(reportResponse, viewId.Trim());
+                    var reportResponse = reportingApi.GetReport(viewId);
+                    reportingService.SaveReportToDisk(reportResponse, viewId);
                 }
             }
             catch (Exception ex)

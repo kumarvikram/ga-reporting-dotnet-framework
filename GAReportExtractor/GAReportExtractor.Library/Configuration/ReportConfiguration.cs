@@ -6,26 +6,26 @@ namespace GAReportExtractor.Library.Configuration
     {
         public static ReportConfiguration GetConfig()
         {
-            return (ReportConfiguration)ConfigurationManager.GetSection("ReportConfiguration") ?? new ReportConfiguration();
+            return (ReportConfiguration)ConfigurationManager.GetSection("reportConfiguration") ?? new ReportConfiguration();
         }
 
-        [ConfigurationProperty("Reports")]
-        [ConfigurationCollection(typeof(Reports), AddItemName = "Report")]
+        [ConfigurationProperty("reports")]
+        [ConfigurationCollection(typeof(Reports), AddItemName = "report")]
         public Reports Reports
         {
             get
             {
-                object o = this["Reports"];
+                object o = this["reports"];
                 return o as Reports;
             }
         }
 
-        [ConfigurationProperty("DateConfiguration")]
+        [ConfigurationProperty("dateConfiguration")]
         public DateConfigurationElement DateConfiguration
         {
             get
             {
-                return base["DateConfiguration"] as DateConfigurationElement;
+                return base["dateConfiguration"] as DateConfigurationElement;
             }
         }
 
