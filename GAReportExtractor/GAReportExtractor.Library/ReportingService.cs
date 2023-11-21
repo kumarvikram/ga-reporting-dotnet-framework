@@ -1,5 +1,4 @@
-﻿using GAReportExtractor.Library.Configuration;
-using Google.Apis.AnalyticsReporting.v4.Data;
+﻿using Google.Analytics.Data.V1Beta;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,34 +7,29 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Report = GAReportExtractor.Library.Configuration.Report;
+using System.Text;
 
 namespace GAReportExtractor.Library
 {
     public class ReportingService
     {
         private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        public void SaveReportToDisk(GetReportsResponse reportsResponse, string viewId)
+        public void SaveReportToDisk(RunReportResponse reportsResponse, string propertyId)
         {
             try
             {
-                if (reportsResponse != null && reportsResponse.Reports.Any(report => report.Data.Rows != null))
+                if (reportsResponse != null)
                 {
                     Logger.Info("Generating extract file...");
 
                     var outputDirectory = ConfigurationManager.AppSettings["OutputDirectory"];
                     Directory.CreateDirectory(outputDirectory); //Create directory if it doesn't exist
 
-                    var reportName = GetReportNameByMetric(reportsResponse.Reports[0].ColumnHeader.MetricHeader.MetricHeaderEntries[0].Name);
-                    var fileName = string.Format("{0}_{1}_{2}.json", reportName, viewId.Trim(), DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.CurrentCulture));
-
-                    var outputList = new List<object>();
-                    foreach (var row in reportsResponse.Reports.SelectMany(r => r.Data.Rows))
-                    {
-                        outputList.Add(new { Dimensions = row.Dimensions, Metrics = row.Metrics.SelectMany(m => m.Values) });
-                    }
-
-                    File.WriteAllText(string.Format(@"{0}\{1}", outputDirectory, fileName), JsonConvert.SerializeObject(outputList));
+                    var delimiter = ConfigurationManager.AppSettings["Delimiter"];
+                  
+                    var fileName = string.Format("GA4Report_{1}_{2}.json", propertyId.Trim(), DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.CurrentCulture));
+                    
+                    File.WriteAllText(string.Format(@"{0}\{1}", outputDirectory, fileName), JsonConvert.SerializeObject(reportsResponse));
                     Logger.Info("Finished geneating extract file...");
                 }
             }
@@ -43,25 +37,6 @@ namespace GAReportExtractor.Library
             {
                 Logger.Error("Error in geneating extract file: " + ex);
             }
-        }
-
-        /// <summary>
-        /// Get report name from config file by any metric
-        /// </summary>
-        /// <param name="metric"></param>
-        /// <returns></returns>
-        private string GetReportNameByMetric(string metric)
-        {
-            var config = ReportConfiguration.GetConfig();
-            foreach (var item in config.Reports)
-            {
-                var report = item as Report;
-                if (report != null && report.Metrics.Contains(metric))
-                {
-                    return report.Name;
-                }
-            }
-            return string.Empty;
         }
        
     }

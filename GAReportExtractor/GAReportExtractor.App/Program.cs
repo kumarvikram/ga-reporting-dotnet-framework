@@ -13,14 +13,12 @@ namespace GAReportExtractor.App
             try
             {
                 //Take View Id's from config
-                var views = ConfigurationManager.AppSettings["Views"].Split(',');
+                var propertyId = ConfigurationManager.AppSettings["PropertyId"];
                 var reportingApi = new ReportingApi();
                 var reportingService = new ReportingService();
-                foreach (var viewId in views)
-                {
-                    var reportResponse = reportingApi.GetReport(viewId);
-                    reportingService.SaveReportToDisk(reportResponse, viewId);
-                }
+                var reportResponse = reportingApi.GetReport(propertyId);
+                reportingService.SaveReportToDisk(reportResponse, propertyId);
+
             }
             catch (Exception ex)
             {
@@ -29,7 +27,6 @@ namespace GAReportExtractor.App
             finally
             {
                 Console.WriteLine("\nClosing App...");
-                //Thread.Sleep(3000);
                 Console.ReadLine();
             }
         }
