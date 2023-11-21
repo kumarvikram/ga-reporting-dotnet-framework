@@ -27,7 +27,7 @@ namespace GAReportExtractor.Library
 
                     var delimiter = ConfigurationManager.AppSettings["Delimiter"];
                   
-                    var fileName = string.Format("GA4Report_{1}_{2}.json", propertyId.Trim(), DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.CurrentCulture));
+                    var fileName = string.Format("GA4Report_{0}_{1}.json", propertyId.Trim(), DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.CurrentCulture));
                     
                     File.WriteAllText(string.Format(@"{0}\{1}", outputDirectory, fileName), JsonConvert.SerializeObject(reportsResponse));
                     Logger.Info("Finished geneating extract file...");

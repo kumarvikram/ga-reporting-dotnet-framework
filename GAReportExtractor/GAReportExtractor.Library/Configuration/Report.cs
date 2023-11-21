@@ -31,22 +31,5 @@ namespace GAReportExtractor.Library.Configuration
                 return this["dimensions"] as string;
             }
         }
-        [ConfigurationProperty("recordCount", IsRequired = true)]
-        public int RecordCount
-        {
-            get
-            {
-                int.TryParse(this["recordCount"] as string, out int recordCount);
-                return recordCount;
-            }
-        }
-        [ConfigurationProperty("orderBy", IsRequired = true)]
-        public string OrderBy
-        {
-            get
-            {
-                return this["orderBy"] as string;
-            }
-        }
     }
 }
