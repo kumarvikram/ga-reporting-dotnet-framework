@@ -29,4 +29,4 @@ For step by step guide on how to do API and credential setup in Google Developer
   </Reports>
 </ReportConfiguration>
 ```
-View the complete list of metrics and dimensions that you can use [here](https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema "Google Analytics Data API Dimensions & Metrics")
+View the complete list of metrics and dimensions that you can use here [Google Analytics Data API Dimensions & Metrics](https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema "")
