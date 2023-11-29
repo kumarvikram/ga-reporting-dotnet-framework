@@ -70,7 +70,7 @@ namespace GAReportExtractor.Library
         /// Get all reports configured in App.config
         /// </summary>
         /// <returns></returns>
-        public RunReportResponse GetReport(string propertyId)
+        public void GenerateReport(string propertyId)
         {
             var reportResponse = new RunReportResponse();
             try
@@ -98,6 +98,7 @@ namespace GAReportExtractor.Library
                         stopwatch.Stop();
                         Logger.Info("Finished fetching report: " + report.Name);
                         Logger.Info(string.Format("Time elapsed: {0:hh\\:mm\\:ss}", stopwatch.Elapsed));
+                        new ReportingService().SaveReportToDisk(report.Name, propertyId ,reportResponse);
                     }
                 }
             }
@@ -105,7 +106,6 @@ namespace GAReportExtractor.Library
             {
                 Logger.Error("Error in fetching reports: " + ex);
             }
-            return reportResponse;
         }
 
     }

@@ -13,12 +13,8 @@ namespace GAReportExtractor.App
             try
             {
                 //Take View Id's from config
-                var propertyId = ConfigurationManager.AppSettings["PropertyId"];
-                var reportingApi = new ReportingApi();
-                var reportingService = new ReportingService();
-                var reportResponse = reportingApi.GetReport(propertyId);
-                reportingService.SaveReportToDisk(reportResponse, propertyId);
-
+                var propertyId = ConfigurationManager.AppSettings["PropertyId"].Trim();
+                new ReportingApi().GenerateReport(propertyId);
             }
             catch (Exception ex)
             {

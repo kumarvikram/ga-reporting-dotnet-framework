@@ -14,7 +14,7 @@ namespace GAReportExtractor.Library
     public class ReportingService
     {
         private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        public void SaveReportToDisk(RunReportResponse reportsResponse, string propertyId)
+        public void SaveReportToDisk(string reportName, string propertyId, RunReportResponse reportsResponse)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace GAReportExtractor.Library
 
                     var delimiter = ConfigurationManager.AppSettings["Delimiter"];
                   
-                    var fileName = string.Format("GA4Report_{0}_{1}.json", propertyId.Trim(), DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.CurrentCulture));
+                    var fileName = string.Format("GA4Report_{0}_{1}_{2}.json", reportName, propertyId, DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.CurrentCulture));
                     
                     File.WriteAllText(string.Format(@"{0}\{1}", outputDirectory, fileName), JsonConvert.SerializeObject(reportsResponse));
                     Logger.Info("Finished geneating extract file...");
