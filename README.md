@@ -3,7 +3,7 @@ C# console app to read data from Google Analytics using latest GA4 Analytics Rep
 
 ## Prerequisites
 For step by step guide on how to do API and credential setup in Google Developer Console
-[Read Google Analytics reports using C# console app](https://kumarvikram.com/google-analytics-report-v4-csharp-console-app/ "Step by step guide on setting up project in Google Developer Console")
+[How to get page views and events data from GA4 in .NET](https://kumarvikram.com/get-ga4-report-net/ "Step by step guide on setting up project in Google Developer Console")
 
 ## How to run?
 * Replace key.json with your actual key file generated from Google Developer Console. 
